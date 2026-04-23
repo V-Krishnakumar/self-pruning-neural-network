@@ -16,13 +16,13 @@ Built as a case study submission for the **Tredence AI Engineering Internship**.
 
 # Project Objective
 
-Traditional neural network pruning is usually performed **after training**:
+Traditional neural network pruning is usually performed after training:
 
 1. Train dense model
 2. Remove low-importance weights
 3. Fine-tune again
 
-This project introduces a **Self-Pruning Neural Network** that learns sparse connectivity **during training itself**.
+This project introduces a **Self-Pruning Neural Network** that learns sparse connectivity during training itself.
 
 The model jointly learns:
 
@@ -39,7 +39,7 @@ Each weight is paired with a learnable gate.
 
 Effective weight:
 
-```text id="f08j7u"
+```text
 W_pruned = W × sigmoid(score / temperature)
 ```
 
@@ -57,7 +57,7 @@ If the gate approaches zero, the connection is effectively removed.
 
 ## CNN Feature Extractor
 
-```text id="ihn5hb"
+```text
 Input (32x32x3)
 ↓
 Conv(32) → ReLU → MaxPool
@@ -67,7 +67,7 @@ Conv(128) → ReLU → MaxPool
 
 ## Sparse Classifier Head
 
-```text id="6z95i8"
+```text
 PrunableLinear(2048 → 256)
 ReLU
 Dropout
@@ -80,7 +80,7 @@ PrunableLinear(256 → 10)
 
 Total Loss:
 
-```text id="pvnybn"
+```text
 CrossEntropyLoss + λ × L1(Gates)
 ```
 
@@ -98,22 +98,17 @@ Where:
 
 Soft gates early, sharper pruning later.
 
-```text id="7vb2ng"
+```text
 Epoch 1: T = 4.0
 Final Epoch: T = 0.7
 ```
 
-## Lambda Sweep
+## Additional Improvements
 
-Multiple lambda values tested to discover best sparsity-performance tradeoff.
-
-## Cosine Learning Rate Scheduling
-
-Improved convergence and stability.
-
-## Checkpoint Saving
-
-Best models saved for each lambda configuration.
+* Lambda sweep for best sparsity-performance tradeoff
+* Cosine learning rate scheduling
+* Checkpoint saving
+* Reproducible experiments with fixed seeds
 
 ---
 
@@ -131,7 +126,7 @@ Best models saved for each lambda configuration.
 
 # Best Balanced Model
 
-```text id="0xk0jr"
+```text
 81.05% CIFAR-10 Accuracy
 43.98% Learned Sparsity
 ```
@@ -140,41 +135,37 @@ This demonstrates that the model can remove nearly half its effective connection
 
 ---
 
+# Accuracy vs Sparsity Tradeoff
+
+![Tradeoff Curve](outputs/tradeoff.png)
+
+---
+
+# Gate Value Distribution
+
+![Gate Histogram](outputs/gate_histogram.png)
+
+---
+
 # Key Insights
 
-## 1. Strong Feature Extraction Matters
+## Strong Feature Extraction Matters
 
-Initial MLP baseline underperformed. Upgrading to CNN backbone improved accuracy significantly.
+Initial MLP baseline underperformed. Upgrading to a CNN backbone significantly improved accuracy.
 
-## 2. Sparse Learning Works
+## Sparse Learning Works
 
-Gate histograms showed many gates collapsing toward zero.
+Gate distributions showed many gates collapsing toward zero.
 
-## 3. Tradeoff is Controllable
+## Tradeoff is Controllable
 
 Lambda directly adjusts the balance between compression and accuracy.
 
 ---
 
-# Outputs Generated
-
-```text id="7f8oyy"
-outputs/
-├── results.csv
-├── tradeoff.png
-├── gate_histogram.png
-
-checkpoints/
-├── model_lambda_1.5e-5.pth
-├── model_lambda_5e-5.pth
-...
-```
-
----
-
 # Repository Structure
 
-```text id="y8ce5n"
+```text
 self-pruning-neural-network/
 │── train.py
 │── model.py
@@ -183,8 +174,18 @@ self-pruning-neural-network/
 │── config.py
 │── requirements.txt
 │── README.md
-│── outputs/
-│── checkpoints/
+│
+├── outputs/
+│   ├── results.csv
+│   ├── tradeoff.png
+│   ├── gate_histogram.png
+│
+├── checkpoints/
+│   ├── model_lambda_1.5e-05.pth
+│   ├── model_lambda_5e-05.pth
+│
+└── report/
+    └── case_study_report.md
 ```
 
 ---
@@ -193,13 +194,13 @@ self-pruning-neural-network/
 
 ## Install Dependencies
 
-```bash id="g7x82p"
+```bash
 pip install -r requirements.txt
 ```
 
 ## Train Models
 
-```bash id="d6nqqm"
+```bash
 python train.py
 ```
 
@@ -207,7 +208,7 @@ python train.py
 
 # Why This Project Matters
 
-Dynamic sparse networks are highly relevant for modern AI systems because they reduce:
+Dynamic sparse networks are relevant for modern AI systems because they reduce:
 
 * inference latency
 * memory usage
@@ -247,7 +248,7 @@ Applications include:
 
 # Final Summary
 
-This project demonstrates an end-to-end AI engineering workflow:
+This project demonstrates an end-to-end AI engineering workflow involving:
 
 * custom neural layer design
 * training system implementation

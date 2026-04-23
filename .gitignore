@@ -1,8 +1,8 @@
 __pycache__/
 *.pyc
-outputs/
-checkpoints/
-.venv/
-env/
-venv/
 .ipynb_checkpoints/
+data/
+.env
+.DS_Store
+outputs/*.pth
+checkpoints/*.pth

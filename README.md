@@ -141,12 +141,6 @@ This demonstrates that the model can remove nearly half its effective connection
 
 ---
 
-# Gate Value Distribution
-
-![Gate Histogram](outputs/gate_histogram.png)
-
----
-
 # Key Insights
 
 ## Strong Feature Extraction Matters

@@ -4,5 +4,3 @@ __pycache__/
 data/
 .env
 .DS_Store
-outputs/*.pth
-checkpoints/*.pth

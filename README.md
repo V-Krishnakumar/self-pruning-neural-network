@@ -1,41 +1,37 @@
-# Self-Pruning Neural Network for Dynamic Sparse Learning
+# 🧠 Self-Pruning Neural Network
 
-A production-style PyTorch implementation of a neural network that **learns to prune its own connections during training** using differentiable gate parameters.
+<p align="center">
+  <b>Dynamic Sparse Learning with Differentiable Gates in PyTorch</b>
+</p>
 
-Built as a case study submission for the **Tredence AI Engineering Internship**.
-
----
-
-## Candidate Details
-
-**Name:** V Krishnakumar
-**Register Number:** RA2311026020074
-**Email:** [kv4553@srmist.edu.in](mailto:kv4553@srmist.edu.in)
-
----
-
-# Project Objective
-
-Traditional neural network pruning is usually performed after training:
-
-1. Train dense model
-2. Remove low-importance weights
-3. Fine-tune again
-
-This project introduces a **Self-Pruning Neural Network** that learns sparse connectivity during training itself.
-
-The model jointly learns:
-
-* classification accuracy
-* connection importance
-* compressed architecture
-* efficiency vs performance tradeoff
+<p align="center">
+  <img src="https://img.shields.io/badge/PyTorch-Deep_Learning-EE4C2C?style=for-the-badge&labelColor=111827" />
+  <img src="https://img.shields.io/badge/CIFAR--10-Training-2563EB?style=for-the-badge&labelColor=111827" />
+  <img src="https://img.shields.io/badge/Sparsity-Learned-16A34A?style=for-the-badge&labelColor=111827" />
+  <img src="https://img.shields.io/badge/Status-Research_Prototype-9333EA?style=for-the-badge&labelColor=111827" />
+</p>
 
 ---
 
-# Core Innovation
+## 🌍 Vision
 
-Each weight is paired with a learnable gate.
+Train neural networks that automatically remove unnecessary connections during learning.
+
+---
+
+## 📌 Problem Statement
+
+Traditional pruning requires:
+
+Train Dense Model → Prune → Fine-tune Again
+
+This increases compute cost and training complexity.
+
+---
+
+## 🚀 Solution
+
+A self-pruning neural network that learns sparse connectivity during training using differentiable gate parameters.
 
 Effective weight:
 
@@ -43,218 +39,114 @@ Effective weight:
 W_pruned = W × sigmoid(score / temperature)
 ```
 
-Where:
-
-* `W` = original weight
-* `score` = learnable gate parameter
-* `temperature` = controls gate sharpness
-
-If the gate approaches zero, the connection is effectively removed.
-
 ---
 
-# Model Architecture
-
-## CNN Feature Extractor
+## 🏗️ Architecture
 
 ```text
 Input (32x32x3)
 ↓
-Conv(32) → ReLU → MaxPool
-Conv(64) → ReLU → MaxPool
-Conv(128) → ReLU → MaxPool
-```
-
-## Sparse Classifier Head
-
-```text
+CNN Feature Extractor
+↓
 PrunableLinear(2048 → 256)
-ReLU
-Dropout
+↓
+ReLU + Dropout
+↓
 PrunableLinear(256 → 10)
 ```
 
 ---
 
-# Loss Function
+## ⚙️ Core Features
 
-Total Loss:
+### 🧠 Learnable Gates
 
-```text
-CrossEntropyLoss + λ × L1(Gates)
-```
+Every weight learns whether it should stay active.
 
-Where:
+### ✂️ Dynamic Sparsity
 
-* CrossEntropy learns classification
-* L1 penalty encourages sparse gate activations
-* λ controls pruning strength
+Connections collapse toward zero during training.
 
----
+### 📉 Compression vs Accuracy Tradeoff
 
-# Engineering Enhancements
+Controlled using λ regularization.
 
-## Temperature Annealing
+### 🔥 Temperature Annealing
 
 Soft gates early, sharper pruning later.
 
-```text
-Epoch 1: T = 4.0
-Final Epoch: T = 0.7
-```
+### 📊 Real Experiments
 
-## Additional Improvements
-
-* Lambda sweep for best sparsity-performance tradeoff
-* Cosine learning rate scheduling
-* Checkpoint saving
-* Reproducible experiments with fixed seeds
+Validated on CIFAR-10.
 
 ---
 
-# Experimental Results (Real Runs)
-
-| Lambda | Test Accuracy | Sparsity % |
-| ------ | ------------- | ---------- |
-| 1.5e-5 | 82.35%        | 26.63%     |
-| 2e-5   | 81.99%        | 36.77%     |
-| 3e-5   | 81.31%        | 43.88%     |
-| 5e-5   | 81.05%        | 43.98%     |
-| 7e-5   | 80.28%        | 38.82%     |
-
----
-
-# Best Balanced Model
+## 📈 Best Result
 
 ```text
-81.05% CIFAR-10 Accuracy
+81.05% Accuracy
 43.98% Learned Sparsity
 ```
 
-This demonstrates that the model can remove nearly half its effective connections while preserving strong predictive performance.
+Nearly half the network effectively removed while maintaining strong performance.
 
 ---
 
-# Accuracy vs Sparsity Tradeoff
+## 🛠️ Tech Stack
 
-![Tradeoff Curve](outputs/tradeoff.png)
-
----
-
-# Key Insights
-
-## Strong Feature Extraction Matters
-
-Initial MLP baseline underperformed. Upgrading to a CNN backbone significantly improved accuracy.
-
-## Sparse Learning Works
-
-Gate distributions showed many gates collapsing toward zero.
-
-## Tradeoff is Controllable
-
-Lambda directly adjusts the balance between compression and accuracy.
+| Layer            | Technology          |
+| ---------------- | ------------------- |
+| Language         | Python              |
+| Framework        | PyTorch             |
+| Dataset          | CIFAR-10            |
+| Analysis         | Pandas + Matplotlib |
+| Deployment Ready | FastAPI (planned)   |
 
 ---
 
-# Repository Structure
+## 📂 Repository Structure
 
 ```text
-self-pruning-neural-network/
-│── train.py
-│── model.py
-│── evaluate.py
-│── utils.py
-│── config.py
-│── requirements.txt
-│── README.md
-│
-├── outputs/
-│   ├── results.csv
-│   ├── tradeoff.png
-│   ├── gate_histogram.png
-│
-├── checkpoints/
-│   ├── model_lambda_1.5e-05.pth
-│   ├── model_lambda_5e-05.pth
-│
-└── report/
-    └── case_study_report.md
+train.py
+model.py
+evaluate.py
+outputs/
+checkpoints/
+report/
 ```
 
 ---
 
-# How to Run
-
-## Install Dependencies
+## ⚙️ Run Locally
 
 ```bash
 pip install -r requirements.txt
-```
-
-## Train Models
-
-```bash
 python train.py
 ```
 
 ---
 
-# Why This Project Matters
+## 🎯 Why It Matters
 
-Dynamic sparse networks are relevant for modern AI systems because they reduce:
+Useful for:
 
-* inference latency
-* memory usage
-* compute cost
-* deployment footprint
-
-Applications include:
-
-* edge AI
-* scalable inference systems
-* sparse expert routing
-* low-cost production models
+* Edge AI
+* Low-latency inference
+* Efficient deployment
+* Sparse expert systems
+* Cost-efficient ML serving
 
 ---
 
-# Future Extensions
+## 🔮 Future Work
 
-* Transformer attention head pruning
-* Quantization + pruning hybrid
-* Reinforcement learned sparsity
-* Mixture-of-Experts sparse routing
-* FastAPI inference deployment
-
----
-
-# Tech Stack
-
-* Python
-* PyTorch
-* Torchvision
-* NumPy
-* Pandas
-* Matplotlib
-* FastAPI
+* Transformer pruning
+* Quantization hybrid
+* MoE sparse routing
+* FastAPI serving layer
 
 ---
 
-# Final Summary
-
-This project demonstrates an end-to-end AI engineering workflow involving:
-
-* custom neural layer design
-* training system implementation
-* hyperparameter optimization
-* efficiency-aware evaluation
-* reproducible experimentation
-
-It reflects practical AI engineering focused not only on accuracy, but also deployability and computational efficiency.
-
----
-
-# Author
+## 👨‍💻 Author
 
 **V Krishnakumar**
-AI / Full Stack / Systems Builder

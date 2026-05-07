@@ -1,6 +1,8 @@
 torch
 torchvision
 numpy
-matplotlib
 pandas
-scikit-learn
+matplotlib
+tqdm
+fastapi
+uvicorn
